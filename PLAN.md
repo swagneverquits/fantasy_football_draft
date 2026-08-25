@@ -1,90 +1,77 @@
-# Fantasy Football Draft Simulator — Plan
+# Plan: Fantasy Football Draft Simulator
 
 ## Objective
 
-Build a draft simulator for a highly customized ESPN fantasy football league. The simulator should estimate which players are likely to be available at each of my picks, conditional on the known draft habits and strategies of the other managers.
+Build a simulator for this customized ESPN fantasy football league that estimates which players are available at my picks, conditional on how every manager drafts, including me.
 
-## Phase 1: Capture league rules and inputs
+## Current state
 
-- Record league size, draft type, draft order, roster slots, bench size, and rounds.
-- Capture scoring settings, including bonuses, penalties, receptions, passing, positional premiums, and any unusual ESPN settings.
-- Import or manually define the player pool, positions, teams, injury/status flags, projections, and average draft position (ADP).
-- Represent my draft picks and roster needs.
-- Represent each manager’s drafting behavior, including the four managers likely to follow ESPN’s autodrafter.
+- Repository: https://github.com/swagneverquits/fantasy_football_draft
+- Status: planning only; no application code yet.
 
-## Phase 2: Create drafting agents
+## Plan
 
-Implement configurable manager profiles, such as:
+### 1. Capture league inputs
 
-- ESPN autodraft: rank/value based, subject to roster constraints.
-- ADP follower: selects near consensus ADP with configurable randomness.
-- Position-focused drafter: prioritizes selected positions or roster construction.
-- Tier/value drafter: waits for positional scarcity and targets falling players.
-- Custom manager: user-defined preferences, keepers, fades, and player exposure limits.
-- My strategy: configurable player rankings, tiers, positional targets, and risk tolerance.
+- [ ] Record team count, draft order, rounds, draft format, roster slots, bench size, and position limits.
+- [ ] Record custom ESPN scoring, bonuses, penalties, and lineup rules.
+- [ ] Define player inputs: projections, ADP, positions, tiers, injuries, and status.
+- [ ] Define my rankings, roster needs, targets, fades, and risk tolerance.
+- [ ] Document behavior assumptions for every manager, including the four ESPN autodrafters.
 
-Every agent should expose parameters so behavior can be tested rather than hard-coded.
+### 2. Build the draft model
 
-## Phase 3: Build the draft engine
+- [ ] Create validated league, player, roster, and manager schemas.
+- [ ] Implement snake-draft sequencing and legal roster construction.
+- [ ] Track drafted players, rosters, remaining players, and pick history.
+- [ ] Support deterministic runs with explicit random seeds.
 
-- Support snake drafts and configurable pick orders.
-- Enforce roster eligibility, roster limits, and draftability.
-- Apply player rankings, projections, ADP, tiers, scarcity, and manager preferences.
-- Add controlled randomness so simulations produce distributions instead of one deterministic result.
-- Save complete draft traces for debugging and review.
+### 3. Implement manager strategies
 
-## Phase 4: Monte Carlo simulation
+- [ ] ESPN-autodraft agent based on rankings/value and roster constraints.
+- [ ] ADP-following agent with configurable randomness.
+- [ ] Positional, tier/value, and custom manager agents.
+- [ ] My strategy agent with rankings, tiers, targets, fades, and roster objectives.
+- [ ] Keep behavior parameters configurable rather than hard-coded.
 
-- Run hundreds or thousands of simulated drafts.
-- Vary uncertain manager behavior and pick randomness within explicit ranges.
-- Track the players available at each of my picks.
-- Track the probability of each player reaching each pick.
-- Track expected roster outcomes, positional distributions, and replacement-value results.
-- Compare alternate draft strategies and draft positions.
+### 4. Simulate and analyze
 
-## Phase 5: Analysis and recommendations
+- [ ] Run hundreds or thousands of drafts.
+- [ ] Vary uncertain manager behavior within explicit ranges.
+- [ ] Calculate player-availability probability at every one of my picks.
+- [ ] Calculate positional runs, scarcity, roster outcomes, and downside percentiles.
+- [ ] Compare alternate strategies and draft positions.
 
-Produce reports showing:
+### 5. Produce reports
 
-- Player availability probabilities at each of my picks.
-- Players most likely to fall to me.
-- Players I should not expect to reach me.
-- Positional runs and scarcity by round.
-- Draft-plan decision points and fallback options.
-- The effect of each manager profile, especially the ESPN autodrafters.
-- Worst-case and percentile outcomes, so avoiding last place is based on more than average projections.
+- [ ] Export CSV and readable Markdown/HTML reports.
+- [ ] Show players most likely to fall to each pick.
+- [ ] Show players I should not expect to reach me.
+- [ ] Show decision points and fallback options by round.
+- [ ] Allow input updates without changing application code.
 
-## Phase 6: Interface and usability
+## Acceptance criteria
 
-- Start with a command-line workflow and CSV/JSON inputs.
-- Add reproducible random seeds for comparing scenarios.
-- Add a simple scenario configuration file.
-- Export results to CSV and readable Markdown/HTML reports.
-- Optionally add a local browser dashboard after the simulation model is trustworthy.
+- A fresh checkout runs a minimal example draft and the test suite.
+- Invalid league settings produce clear validation errors.
+- A hand-checkable draft produces the expected pick order and legal rosters.
+- Each manager agent makes legal, explainable picks.
+- Seeded simulations are repeatable; unseeded simulations produce distributions.
+- Reports identify player availability at my picks and quantify downside outcomes.
 
-## Validation and testing
+## Verification
 
-- Unit-test roster rules, snake-draft order, player eligibility, and agent selection.
-- Test that autodraft profiles respect rankings and roster constraints.
-- Run deterministic simulations with fixed seeds.
-- Validate results against manually constructed small drafts.
-- Add regression fixtures for the league’s custom settings.
+- [ ] Unit-test scoring, roster rules, pick sequencing, and agent selection.
+- [ ] Use fixed seeds for regression tests.
+- [ ] Validate against manually constructed small drafts.
+- [ ] Add fixtures for unusual ESPN settings.
+- [ ] Compare simulated behavior with known ADP behavior.
 
-## Initial deliverables
+## Open questions
 
-1. Project structure and documentation.
-2. League configuration schema.
-3. Player-data import format.
-4. Draft engine with snake-draft support.
-5. Configurable autodrafter and custom manager agents.
-6. Simulation runner with reproducible seeds.
-7. Pick-availability report for my draft slots.
-
-## Decisions needed from the league data
-
-- Exact scoring and roster settings.
-- Number of teams and draft order.
-- Whether there are keepers, traded picks, or position limits.
-- My draft position and preferred strategy.
-- Player projections/rankings source.
-- How each manager tends to draft, beyond the four ESPN autodrafters.
+- [ ] Exact scoring and roster settings.
+- [ ] Number of teams, rounds, and my draft position.
+- [ ] Keepers, traded picks, or special position limits.
+- [ ] Projection/ranking and ADP source.
+- [ ] Manager behavior beyond the four ESPN autodrafters.
+- [ ] How to define and optimize “avoid last place” risk.
